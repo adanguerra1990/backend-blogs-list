@@ -1,0 +1,15 @@
+GET http://localhost:3001/api/blogs
+
+###
+GET http://localhost:3001/api/blogs/65e224eb2d01c08665cd4b61
+
+###
+POST http://localhost:3001/api/blogs 
+Content-Type: application/json
+
+{
+    "title": "Eloquent JavaScript",
+    "author": "Marijn Haverbeke",
+    "url": "https://eloquentjs-es.thedojo.mx/",
+    "likes": 10
+}
