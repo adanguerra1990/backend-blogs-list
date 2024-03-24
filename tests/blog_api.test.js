@@ -82,6 +82,21 @@ test('crea una nueva publicación de blog y verifica que el número total de blo
     expect(blogsAfterPost.length).toBe(contadorBlogsInicial + 1)
 })
 
+test('crea una nueva publicación de blog con likes por defecto a 0 si no se proporciona', async () => {
+    const newBlog = {
+        title: 'Nuevo Blog',
+        author: 'Autor de Prueba',
+        url: 'https://www.nuevoblog.com',
+    }
+
+    const response = await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
+    expect(response.body.likes).toBe(0)
+})
 
 afterAll(() => {
     mongoose.connection.close()
