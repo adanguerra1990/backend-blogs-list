@@ -98,6 +98,29 @@ test('crea una nueva publicación de blog con likes por defecto a 0 si no se pro
     expect(response.body.likes).toBe(0)
 })
 
+test('responde con 400 Bad Request si falta la propiedad title o url', async() => {
+    const blogSinTitulo =  {
+        author: 'Autor de Prueba',
+        url: 'https://www.nuevoblog.com'
+    }
+
+    const blogSinUrl = {
+        title: 'Nuevo blog',
+        author: 'Autor de Prueba'
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(blogSinTitulo)
+        .expect(400)
+        
+    await api
+        .post('/api/blogs')
+        .send(blogSinUrl)
+        .expect(400)
+})
+
+
 afterAll(() => {
     mongoose.connection.close()
 })
