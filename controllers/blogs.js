@@ -8,7 +8,7 @@ blogRouter.get('/', async (request, response, next) => {
     } catch (exception) {
         next(exception)
     }
-    
+
 })
 
 blogRouter.get('/:id', async (request, response, next) => {
@@ -32,8 +32,13 @@ blogRouter.post('/', async (request, response, next) => {
     try {
         const saveBlog = await blog.save()
         response.status(201).json(saveBlog)
-    } catch(exception) {
-        next(exception)    }    
+    } catch (exception) {        
+        if (exception.name === 'ValidationError') {            
+            response.status(400).json({ error: exception.message })
+        } else {
+            next(exception)
+        }
+    }
 })
 
 module.exports = blogRouter
