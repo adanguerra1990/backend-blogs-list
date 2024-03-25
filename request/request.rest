@@ -8,8 +8,7 @@ POST http://localhost:3001/api/blogs
 Content-Type: application/json
 
 {
-    "title": "Eloquent JavaScript",
-    "author": "Marijn Haverbeke",
-    "url": "https://eloquentjs-es.thedojo.mx/",
-    "likes": 10
+    "title": "Libo test",
+    "author": "ajguerra",
+    "url": "https://test.mx/"
 }
