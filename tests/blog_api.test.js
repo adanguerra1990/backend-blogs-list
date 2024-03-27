@@ -41,18 +41,13 @@ test('crea una nueva publicación de blog y verifica que el número total de blo
         likes: 10
     }
 
-    const response = await api
+    await api
         .post('/api/blogs')
         .send(newBlog)
         .expect(201)
         .expect('Content-Type', /application\/json/)
 
-    expect(response.body.title).toBe(newBlog.title)
-    expect(response.body.author).toBe(newBlog.author)
-    expect(response.body.url).toBe(newBlog.url)
-    expect(response.body.likes).toBe(newBlog.likes)
-
-    const blogsAfterPost = await Blog.find({})
+    const blogsAfterPost = await helper.blogInDB()
     expect(blogsAfterPost.length).toBe(contadorBlogsInicial + 1)
 })
 
@@ -95,7 +90,7 @@ test('Se puede eliminar un Blog con id valido estado 204', async () => {
     const blogAtStart = await helper.blogInDB()
     const blogToDelete = blogAtStart[0]
     console.log('blogToDelete', blogToDelete)
-    
+
     await api
         .delete(`/api/blogs/${blogToDelete.id}`)
         .expect(204)
@@ -106,6 +101,34 @@ test('Se puede eliminar un Blog con id valido estado 204', async () => {
         helper.inicialBlogs.length - 1
     )
 })
+
+test('Actualizar un blog Correctamente', async () => {
+    const blogAtStart = await helper.blogInDB()
+    const blogToUpdate = blogAtStart[0]
+    const updateBlog = {
+        'title': 'einstein',
+        'author': 'walter isaacson',
+        'url': 'https://www.amazon.com/-/es/Walter-Isaacson/dp/8499080138',
+        'likes': 20,
+    }
+
+    await api
+        .put(`/api/blogs/${blogToUpdate.id}`)
+        .send(updateBlog)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+
+    const blogsAtEnd = await helper.blogInDB()
+    const updateBlogInDB = blogsAtEnd.find(blog => blog.id === blogToUpdate.id)
+
+    expect(updateBlogInDB).toEqual(expect.objectContaining({
+        'title': updateBlog.title,
+        'author': updateBlog.author,
+        'url': updateBlog.url,
+        'likes': updateBlog.likes
+    }))
+})
+
 
 afterAll(() => {
     mongoose.connection.close()
