@@ -86,11 +86,26 @@ test('responde con 400 Bad Request si falta la propiedad title o url', async () 
     }
 
     await helper.blogWithMissingFields(api, blogSinUrl)
-   
+
     const blogAtEnd = await helper.blogInDB()
     expect(blogAtEnd).toHaveLength(helper.inicialBlogs.length)
 })
 
+test('Se puede eliminar un Blog con id valido estado 204', async () => {
+    const blogAtStart = await helper.blogInDB()
+    const blogToDelete = blogAtStart[0]
+    console.log('blogToDelete', blogToDelete)
+    
+    await api
+        .delete(`/api/blogs/${blogToDelete.id}`)
+        .expect(204)
+
+    const blogAtEnd = await helper.blogInDB()
+
+    expect(blogAtEnd).toHaveLength(
+        helper.inicialBlogs.length - 1
+    )
+})
 
 afterAll(() => {
     mongoose.connection.close()
