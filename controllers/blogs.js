@@ -12,11 +12,15 @@ blogRouter.get('/', async (request, response, next) => {
 })
 
 blogRouter.get('/:id', async (request, response, next) => {
-    Blog.findById(request.params.id)
-        .then(blog => {
-            blog ? response.json(blog) : response.status(404).end()
-        })
-        .catch((error) => next(error))
+    try {
+        const  blog = await Blog.findById(request.params.id)
+
+        blog ? response.json(blog) : response.status(404).end()
+    } catch(exception) {
+        next(exception)
+    }
+    
+        
 })
 
 blogRouter.post('/', async (request, response, next) => {
@@ -38,6 +42,15 @@ blogRouter.post('/', async (request, response, next) => {
         } else {
             next(exception)
         }
+    }
+})
+
+blogRouter.delete('/:id', async (request, response, next) => {
+    try {
+        await Blog.findByIdAndDelete(request.params.id)
+        response.status(204).end()
+    }catch(exception) {
+        next(exception)
     }
 })
 
